@@ -21,7 +21,7 @@ async function fetchApiKey() {
     const config = {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        boy: JSON.stringify({ message: "I like candy"}),
+        body: JSON.stringify({ message: "I like candy"}),
     };
     try {
         const res = await fetch("https://proxy-key-u0q4.onrender.com/get-key", config);
@@ -29,8 +29,9 @@ async function fetchApiKey() {
             throw new Error("Could not get key");
         }
         const data = await res.json();
-        return KeyboardEvent.gemini;
-    } catch (error) {
+        const key = data.key;
+        return key; 
+    }   catch (error) {
         console.error(error);
         return null;
     }
@@ -43,17 +44,18 @@ async function sendMessageToGemini(userMessage) {
             renderNewMessage("Error", "No Api key");
             throw new Error("No API Key");
         }
-        const instructions = "| Your name is..."
+        const instructions = "| Everything between the pipes are instuctions from the website you are being used on. Your name is Jarvis, only respond in 3-4 sentences. |"
+
         const config = {
             method: "POST",
             headers:{"Content-Type": "application/json"},
             body: JSON.stringify({
   "contents": [{
-    "parts":[{"text": "Explain how AI works"}]
+    "parts":[{text: userMessage + instructions}]
     }]
    })
         };
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key="
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
         const res = await fetch(url + key, config);
         if (res.status != 200) {
             throw new Error ("Could not talk to Gemini for some reason");
