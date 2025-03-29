@@ -61,8 +61,8 @@ async function sendMessageToGemini(userMessage) {
             throw new Error ("Could not talk to Gemini for some reason");
         }
         const data = await res.json();
-        renderNewMessage("Robot", data.candidates[0].content.parts[0].text);
-        addToStorage("Robot", data.candidates[0].content.parts[0].text);
+        renderNewMessage("Jarvis", data.candidates[0].content.parts[0].text);
+        addToStorage("Jarvis", data.candidates[0].content.parts[0].text);
     } catch (error) {
         console.error(error);
     }
